@@ -16,16 +16,23 @@ from pathlib import Path
 from typing import Optional
 
 import environ
+import structlog
+
+from django_intmd.logger_config import LoggerConfig
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent
 PROJECT_DIR = BASE_DIR.parent
+
+LoggerConfig()
+logger = structlog.get_logger(__name__)
 
 env = environ.Env(
     DEBUG=(bool, False),
     APP_ENV=(str, "development"),
     DJANGO_SECRET_KEY=(str, "secret_key"),
 )
+
 
 
 @lru_cache()
@@ -69,6 +76,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "matching_app.apps.MatchingAppConfig",
+    "django_structlog",
 ]
 
 MIDDLEWARE = [
@@ -79,6 +87,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "django_structlog.middlewares.RequestMiddleware",
 ]
 
 ROOT_URLCONF = "django_intmd.urls"
@@ -156,3 +165,34 @@ STATIC_URL = "static/"
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+# django-structlog configuration
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "formatters": {
+        "structlog": {
+            "()": structlog.stdlib.ProcessorFormatter,
+            "processor": structlog.processors.JSONRenderer(),
+        }
+    },
+    "handlers": {
+        "console": {
+            "class": "logging.StreamHandler",
+            "formatter": "structlog",
+        },
+    },
+    "loggers": {
+        "": {  # ルートロガーを設定
+            "handlers": ["console"],
+            "level": "INFO",
+        },
+        "django_structlog": {
+            "handlers": ["console"],
+            "level": "INFO",
+        },
+    },
+}
+
+# 環境変数の設定後
+logger.info("Environment", APP_ENV="development", DEBUG=True)
