@@ -10,49 +10,23 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
-import os
-from functools import lru_cache
 from pathlib import Path
-from typing import Optional
 
-import environ
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent
-PROJECT_DIR = BASE_DIR.parent
+BASE_DIR = Path(__file__).resolve().parent.parent
+
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-# SECRET_KEY = 'django-insecure-t-1%lz-43b1xlgzlw8k)iz9d=619va$ob(c8ytb)_1gy38p=ic'
+SECRET_KEY = 'django-insecure-grvdumvq=mh%kewz9!sgfk7j^zsf9m8&q@5q9pl_0+f6#k!&3p'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-env = environ.Env(
-    DEBUG=(bool, False),
-    APP_ENV=(str, "development"),
-    DJANGO_SECRET_KEY=(str, "secret_key"),
-)
+ALLOWED_HOSTS = []
 
-@lru_cache()
-def get_env_filename() -> Optional[str]:
-    env_filename = os.path.join(PROJECT_DIR, ".env")
-    if os.path.exists(env_filename):
-        return env_filename
-    return None
-
-env_filename = get_env_filename()
-
-if env_filename is None:
-    env = environ.Env(APP_ENV=(str, "production"))
-else:
-    environ.Env.read_env(env_filename)
-    DEBUG = env("DEBUG")
-
-SECRET_KEY: str = env("DJANGO_SECRET_KEY")
-
-ALLOWED_HOSTS = env.list("ALLOWED_HOSTS", default=[])
 
 # Application definition
 
@@ -102,12 +76,8 @@ WSGI_APPLICATION = 'django_intmd.wsgi.application'
 
 DATABASES = {
     'default': {
-        "ENGINE": "django.db.backends.mysql",
-        "NAME": env("DB_NAME"),
-        "USER": env("DB_USER"),
-        "PASSWORD": env("DB_PASS"),
-        "HOST": env("DB_HOST"),
-        "PORT": "3306",
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
 
