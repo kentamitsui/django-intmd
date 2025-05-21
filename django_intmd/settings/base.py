@@ -18,10 +18,10 @@ from typing import Optional
 import environ
 import structlog
 
-from django_intmd.logger_config import LoggerConfig
+from django_intmd.settings.logger_config import LoggerConfig
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent
+BASE_DIR = Path(__file__).resolve().parent.parent
 PROJECT_DIR = BASE_DIR.parent
 
 LoggerConfig()
@@ -32,8 +32,6 @@ env = environ.Env(
     APP_ENV=(str, "development"),
     DJANGO_SECRET_KEY=(str, "secret_key"),
 )
-
-
 
 @lru_cache()
 def get_env_filename() -> Optional[str]:
@@ -183,16 +181,15 @@ LOGGING = {
         },
     },
     "loggers": {
-        "": {  # ルートロガーを設定
+        "django_structlog": {
             "handlers": ["console"],
             "level": "INFO",
         },
-        "django_structlog": {
+        "appserver": {
             "handlers": ["console"],
             "level": "INFO",
         },
     },
 }
 
-# 環境変数の設定後
 logger.info("Environment", APP_ENV="development", DEBUG=True)
