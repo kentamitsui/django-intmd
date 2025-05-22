@@ -52,6 +52,8 @@ else:
 SECRET_KEY: str = env("DJANGO_SECRET_KEY")
 
 ALLOWED_HOSTS = env.list("ALLOWED_HOSTS", default=[])
+
+logger.info("Environment", APP_ENV="development", DEBUG=True)
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
@@ -195,4 +197,3 @@ LOGGING = {
     },
 }
 
-logger.info("Environment", APP_ENV="development", DEBUG=True)
