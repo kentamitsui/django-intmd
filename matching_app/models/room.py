@@ -11,6 +11,7 @@ logger = structlog.get_logger(__name__)
 
 MAX_ROOM_MEMBERS = 2
 
+
 class RoomManager(models.Manager):
     def get_or_create_room_with_members(self, users: list[User]) -> "Room":
         if len(users) != MAX_ROOM_MEMBERS:
@@ -34,8 +35,10 @@ class RoomManager(models.Manager):
                 RoomMember.objects.create(room=room, user=user)
         return room
 
+
 class Room(BaseModel):
     objects = RoomManager()
+
     class Meta:
         ordering = ["-updated_at"]
 
