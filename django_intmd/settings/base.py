@@ -197,3 +197,4 @@ LOGGING = {
     },
 }
 
+AUTH_USER_MODEL = 'matching_app.User'
