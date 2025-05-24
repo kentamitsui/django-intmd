@@ -33,6 +33,7 @@ env = environ.Env(
     DJANGO_SECRET_KEY=(str, "secret_key"),
 )
 
+
 @lru_cache()
 def get_env_filename() -> Optional[str]:
     env_filename = os.path.join(PROJECT_DIR, ".env")
@@ -197,4 +198,4 @@ LOGGING = {
     },
 }
 
-AUTH_USER_MODEL = 'matching_app.User'
+AUTH_USER_MODEL = "matching_app.User"

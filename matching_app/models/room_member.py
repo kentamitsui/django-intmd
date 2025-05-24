@@ -1,4 +1,3 @@
-
 from django.db import models
 
 from matching_app.models.base import BaseModel

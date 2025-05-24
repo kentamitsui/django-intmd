@@ -1,6 +1,7 @@
-from django.db import models
 from datetime import datetime
+
 from django.contrib.auth.models import AbstractUser, BaseUserManager
+from django.db import models
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
@@ -57,6 +58,7 @@ class UserManager(BaseUserManager):
         )
         return user
 
+
 class User(AbstractUser):
     username = models.CharField(max_length=50, unique=False)
     email = models.EmailField(unique=True)
@@ -81,7 +83,8 @@ class User(AbstractUser):
     objects = UserManager()
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = ["username", "date_of_birth"]
-    
+
+
 @receiver(post_save, sender=User)
 def create_OneToOnes(instance, created, **kwargs):
     if created:
