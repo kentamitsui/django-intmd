@@ -38,6 +38,9 @@ migrations: ## Create the migrations for new models
 migrate: ## Migrate the database
 	docker compose exec django python manage.py migrate
 
+show-migrations: ## Show the migrations for the project
+	docker compose exec django python manage.py showmigrations
+
 test: ## Run all tests in the Django project
 	docker compose exec django python manage.py test --settings=django_intmd.settings.test
 
