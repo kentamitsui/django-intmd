@@ -7,3 +7,5 @@ class BaseModel(models.Model):
 
     class Meta:
         abstract = True
+
+    AUTH_USER_MODEL = "matching_app.User"
