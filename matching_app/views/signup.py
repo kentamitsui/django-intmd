@@ -42,7 +42,7 @@ def signup(request: HttpRequest) -> HttpResponse:
                 email=email,
                 password=password,
                 date_of_birth=date_of_birth,
-                is_active=True,
+                is_active=False, # 新規ユーザーのメール認証が完了するまでログイン出来ないようにする
             )
 
         if user is None:
@@ -51,7 +51,7 @@ def signup(request: HttpRequest) -> HttpResponse:
             return render(request, "signup_error.html")
 
         login(request, user)
-        return redirect("user_home")
+        return redirect("verify_email", id=user.id)
 
     else:
         form = SignupForm()
