@@ -42,7 +42,7 @@ def signup(request: HttpRequest) -> HttpResponse:
                 email=email,
                 password=password,
                 date_of_birth=date_of_birth,
-                is_active=False, # 新規ユーザーのメール認証が完了するまでログイン出来ないようにする
+                is_active=False,  # 新規ユーザーのメール認証が完了するまでログイン出来ないようにする
             )
 
         if user is None:
