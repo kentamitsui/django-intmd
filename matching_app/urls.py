@@ -7,6 +7,7 @@ from matching_app.views.login import login_view, logout_view
 from matching_app.views.signup import signup
 from matching_app.views.user_profile import user_home, user_profile_update
 from matching_app.views.verify import send_new_verification_code, verify_email
+from matching_app.views.user_profile import user_profile_update, user_home, user_profile_list
 
 urlpatterns = (
     [
@@ -18,6 +19,7 @@ urlpatterns = (
         path("signup/verify/<int:id>/", verify_email, name="verify_email"),
         path("signup/verify/resend/<int:id>/", send_new_verification_code, name="send_new_verification_code"),
         path("profiles/me/update/", user_profile_update, name="user_profile_update"),
+        path("profiles/list/", user_profile_list, name="user_profile_list"),
     ]
     + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
     + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

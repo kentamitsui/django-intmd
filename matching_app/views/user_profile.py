@@ -1,3 +1,5 @@
+import random
+
 import structlog
 from django.contrib.auth.decorators import login_required
 from django.http import HttpRequest, HttpResponse
@@ -5,6 +7,7 @@ from django.shortcuts import redirect, render
 from django.views.decorators.http import require_http_methods
 
 from matching_app.forms.user_profile import UserForm, UserProfileForm
+from django.contrib.auth import get_user_model
 
 logger = structlog.get_logger(__name__)
 
@@ -46,4 +49,15 @@ def user_profile_update(request: HttpRequest) -> HttpResponse:
             "user_profile_form": user_profile_form,
             "user_profile": user_profile,
         },
+    )
+
+@login_required
+@require_http_methods(["GET"])
+def user_profile_list(request: HttpRequest) -> HttpResponse:
+    users = list(get_user_model().objects.all().exclude(id=request.user.id))
+    random.shuffle(users)
+    return render(
+        request,
+        "user_profile_list.html",
+        {"users": users},
     )
