@@ -5,9 +5,8 @@ from django.urls import path
 from matching_app.views.index import index
 from matching_app.views.login import login_view, logout_view
 from matching_app.views.signup import signup
-from matching_app.views.user_profile import user_home, user_profile_update
+from matching_app.views.user_profile import user_home, user_profile_detail, user_profile_list, user_profile_update
 from matching_app.views.verify import send_new_verification_code, verify_email
-from matching_app.views.user_profile import user_profile_update, user_home, user_profile_list
 
 urlpatterns = (
     [
@@ -20,6 +19,7 @@ urlpatterns = (
         path("signup/verify/resend/<int:id>/", send_new_verification_code, name="send_new_verification_code"),
         path("profiles/me/update/", user_profile_update, name="user_profile_update"),
         path("profiles/list/", user_profile_list, name="user_profile_list"),
+        path("profiles/<int:pk>/", user_profile_detail, name="user_profile_detail"),
     ]
     + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
     + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
