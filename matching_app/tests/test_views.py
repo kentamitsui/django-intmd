@@ -49,6 +49,7 @@ class SignupViewTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, "signup_error.html")
 
+
 class VerifyViewTests(TestCase):
     def setUp(self):
         self.verify_user = get_user_model().objects.create_user(
@@ -92,6 +93,7 @@ class VerifyViewTests(TestCase):
 
         got_verify_user = User.objects.get(id=self.verify_user.id)
         self.assertFalse(got_verify_user.is_active)
+
 
 class LoginViewTests(TestCase):
     def setUp(self):
