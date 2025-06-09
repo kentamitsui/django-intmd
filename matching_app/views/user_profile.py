@@ -8,6 +8,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.views.decorators.http import require_http_methods
 
 from matching_app.forms.user_profile import UserForm, UserProfileForm
+from matching_app.models import UserLike
 
 logger = structlog.get_logger(__name__)
 
@@ -68,4 +69,9 @@ def user_profile_list(request: HttpRequest) -> HttpResponse:
 @require_http_methods(["GET"])
 def user_profile_detail(request: HttpRequest, pk: int) -> HttpResponse:
     user = get_object_or_404(get_user_model().objects.select_related("userprofile"), pk=pk)
-    return render(request, "user_profile_detail.html", {"user": user})
+    is_like = UserLike.objects.filter(sender=request.user, receiver=user).exists()
+    return render(
+        request,
+        "user_profile_detail.html",
+        {"user": user, "is_like_user": is_like},
+    )

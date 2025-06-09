@@ -9,6 +9,9 @@
     <form method="get" action="{% url 'recruitment_create' %}">
       <button type="submit" class="submit-button">Create New</button>
     </form>
+    <form method="get" action="{% url 'recruitment_search' %}">
+      <button type="submit" class="submit-button">Search</button>
+    </form>
   </div>
   <h1>Recruitment Timeline</h1>
 
@@ -16,14 +19,14 @@
     {% for recruitment in page_obj %}
     <div class="timeline-item">
       <div class="timeline-meta">
-        <a href="{% url 'user_profile_detail' pk=recruitment.user.id %}">
+        <a href="{% url 'recruitment_detail' pk=recruitment.id %}">
           {% if recruitment.user.icon %}
           <img src="{{ recruitment.user.icon.url }}" alt="Icon" class="timeline-icon">
           {% else %}
           <img src="{% static 'media/user_icons/default_user_icon.png' %}" alt="Icon" class="timeline-icon">
           {% endif %}
         </a>
-        <a href="{% url 'user_profile_detail' pk=recruitment.user.id %}">{{ recruitment.user.username }}</a>
+        <a href="{% url 'recruitment_detail' pk=recruitment.id %}">{{ recruitment.user.username }}</a>
       </div>
       <h2>
         {{ recruitment.title }}
