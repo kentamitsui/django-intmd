@@ -1,57 +1,84 @@
-import tempfile # 追加
+import tempfile  # 追加
 
 from django.contrib.auth import get_user_model
-from django.core.files.uploadedfile import SimpleUploadedFile # 追加
+from django.core.files.uploadedfile import SimpleUploadedFile  # 追加
 from django.test import TestCase
 from django.urls import reverse
-from PIL import Image # 追加
+from PIL import Image  # 追加
 
-from matching_app.models import User, UserVerification, Recruitment
+from matching_app.models import User, UserVerification, Recruitment, UserLike
 
-class SignupViewTests(TestCase):
+
+class UserLikeViewTests(TestCase):
     def setUp(self):
-        self.existing_user = User.objects.create_user(
-            username="existing_user",
-            email="existing@example.com",
-            password="ExistingPass123",
+        self.login_user = User.objects.create_user(
+            username="login_user",
+            email="login@example.com",
+            password="LoginPass123",
             date_of_birth="2000-01-01",
         )
-
-        self.signup_url = reverse("signup")
-
-    def test_signup_success(self):
-        response = self.client.post(
-            self.signup_url,
-            {
-                "username": "new_user",
-                "email": "new@example.com",
-                "password": "NewPass123",
-                "date_of_birth": "2000-01-01",
-            },
+        self.user1 = User.objects.create_user(
+            username="like_user1",
+            email="like1@example.com",
+            password="Like1Pass123",
+            date_of_birth="2000-01-01",
+        )
+        self.user2 = User.objects.create_user(
+            username="like_user2",
+            email="like2@example.com",
+            password="Like2Pass123",
+            date_of_birth="1980-01-01",
+        )
+        self.user3 = User.objects.create_user(
+            username="like_user3",
+            email="like3@example.com",
+            password="Like3Pass123",
+            date_of_birth="1980-01-01",
+        )
+        self.user4 = User.objects.create_user(
+            username="like_user4",
+            email="like4@example.com",
+            password="Like4Pass123",
+            date_of_birth="1980-01-01",
+        )
+        self.user_like_to_user1 = UserLike.objects.create(
+            sender=self.login_user,
+            receiver=self.user1,
+        )
+        self.user_like_to_user3 = UserLike.objects.create(
+            sender=self.login_user,
+            receiver=self.user3,
+        )
+        self.user_like_from_user1 = UserLike.objects.create(
+            sender=self.user1,
+            receiver=self.login_user,
+        )
+        self.user_like_from_user4 = UserLike.objects.create(
+            sender=self.user4,
+            receiver=self.login_user,
         )
 
-        self.assertEqual(response.status_code, 302)
-        self.assertTrue(User.objects.filter(email="new@example.com").exists())
+        self.client.login(email=self.login_user.email, password="LoginPass123")
+        self.user_like_list_url = reverse("user_like_list")
 
-        new_user = User.objects.get(email="new@example.com")
-
-        self.assertRedirects(response, reverse("verify_email", args=[new_user.id]))
-        self.assertFalse(new_user.is_active)
-
-    def test_signup_failure_with_existing_user(self):
+    def test_user_like_toggle_create_success(self):
         response = self.client.post(
-            self.signup_url,
-            {
-                "username": "existing_user",
-                "email": "existing@example.com",
-                "password": "ExistingPass123",
-                "date_of_birth": "2000-01-01",
-            },
+            reverse("user_like_toggle", args=[self.user2.id]),
         )
 
         self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, "signup_error.html")
+        self.assertEqual(response.json(), {"like_status": "liked"})
+        self.assertTrue(UserLike.objects.filter(sender=self.login_user, receiver=self.user2).exists())
 
+    def test_user_like_toggle_delete_success(self):
+        response = self.client.post(
+            reverse("user_like_toggle", args=[self.user1.id]),
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json(), {"like_status": "unliked"})
+        self.assertFalse(UserLike.objects.filter(sender=self.login_user, receiver=self.user1).exists())
+        
 
 class VerifyViewTests(TestCase):
     def setUp(self):
@@ -155,6 +182,7 @@ class LoginViewTests(TestCase):
         self.assertEqual(response.status_code, 302)
         self.assertRedirects(response, self.index_url)
 
+
 class UserProfileViewTests(TestCase):
     def setUp(self):
         self.user1 = get_user_model().objects.create_user(
@@ -229,6 +257,7 @@ class UserProfileViewTests(TestCase):
         self.assertTemplateUsed(response, "user_profile_detail.html")
         self.assertIn("user", response.context)
         self.assertEqual(response.context["user"].id, self.user2.id)
+
 
 class RecruitmentViewTests(TestCase):
     def setUp(self):
