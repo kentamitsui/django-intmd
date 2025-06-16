@@ -70,6 +70,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    "daphne",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -78,9 +79,11 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "matching_app.apps.MatchingAppConfig",
     "django_structlog",
+    "corsheaders",
 ]
 
 MIDDLEWARE = [
+    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -110,7 +113,16 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = "django_intmd.wsgi.application"
+ASGI_APPLICATION = "django_intmd.asgi.application"  # Daphne
 
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [(env("REDIS_HOST"), env("REDIS_PORT"))],
+        },
+    }
+}
 
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
@@ -192,6 +204,7 @@ else:
     EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 logger.info(f"Using email backend: {EMAIL_BACKEND}")
 
+
 # django-structlog configuration
 LOGGING = {
     "version": 1,
@@ -221,3 +234,20 @@ LOGGING = {
 }
 
 AUTH_USER_MODEL = "matching_app.User"
+
+# CORS
+if env("APP_ENV") == "development":
+    CORS_ALLOWED_ORIGINS = [
+        "http://localhost:8080",
+    ]
+else:
+    CORS_ALLOWED_ORIGINS = []
+
+# CSRF
+if env("APP_ENV") == "development":
+    CSRF_TRUSTED_ORIGINS = [
+        "http://localhost:8080",
+    ]
+else:
+    CSRF_TRUSTED_ORIGINS = []
+    
