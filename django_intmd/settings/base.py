@@ -52,7 +52,8 @@ else:
 
 SECRET_KEY: str = env("DJANGO_SECRET_KEY")
 
-ALLOWED_HOSTS = env.list("ALLOWED_HOSTS", default=[])
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', '192.168.65.1', '*']
+
 
 logger.info("Environment", APP_ENV="development", DEBUG=True)
 # Quick-start development settings - unsuitable for production
@@ -63,8 +64,6 @@ SECRET_KEY = "django-insecure-grvdumvq=mh%kewz9!sgfk7j^zsf9m8&q@5q9pl_0+f6#k!&3p
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-
-ALLOWED_HOSTS = []
 
 
 # Application definition
@@ -80,6 +79,7 @@ INSTALLED_APPS = [
     "matching_app.apps.MatchingAppConfig",
     "django_structlog",
     "corsheaders",
+    "channels",
 ]
 
 MIDDLEWARE = [

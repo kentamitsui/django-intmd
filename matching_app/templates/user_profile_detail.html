@@ -38,6 +38,10 @@
       </div>
     </div>
     <div class="profile-actions">
+      <form action="{% url 'chat_room_create' user.id %}" method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn-primary">Message</button>
+      </form>
       <button id="like-button" class="btn-like {% if is_like_user %}liked{% endif %}" data-user-id="{{ user.id }}"
         data-update-url="{% url 'user_like_toggle' receiver_id=user.id %}">
         {% if is_like_user %}
