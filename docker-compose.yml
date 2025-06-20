@@ -70,7 +70,6 @@ services:
       - DB_PASS=password
       - REDIS_HOST=redis
       - REDIS_PORT=6379
-      - DJANGO_SETTINGS_MODULE=django_intmd.settings.base
     command: ['/etc/scripts/deployments/run_gunicorn.sh']
     depends_on:
       mysql:
@@ -96,8 +95,6 @@ services:
       - DB_PASS=password
       - REDIS_HOST=redis
       - REDIS_PORT=6379
-      - DJANGO_SETTINGS_MODULE=django_intmd.settings.base
-      - PYTHONPATH=/django_intmd
     command: sh /etc/scripts/deployments/run_daphne.sh
     depends_on:
       mysql:
