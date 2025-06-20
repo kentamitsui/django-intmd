@@ -41,9 +41,16 @@
     const oppositeUsername = JSON.parse(document.getElementById('opposite-username').textContent)
     const currentUsername = JSON.parse(document.getElementById('current-username').textContent)
     const chatMessagesContainer = document.getElementById('chat-messages')
+
+    // ポート8000の場合は8001に切り替え
+    let wsHost = window.location.host
+    if (window.location.port === '8000') {
+      wsHost = window.location.hostname + ':8001'
+    }
+
     const chatSocket = new WebSocket(
       'ws://'
-      + window.location.host
+      + wsHost
       + '/ws/chat/'
       + roomId
       + '/'
