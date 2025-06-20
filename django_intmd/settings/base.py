@@ -52,7 +52,7 @@ else:
 
 SECRET_KEY: str = env("DJANGO_SECRET_KEY")
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', '192.168.65.1', '*']
+ALLOWED_HOSTS = []
 
 
 logger.info("Environment", APP_ENV="development", DEBUG=True)
@@ -79,7 +79,6 @@ INSTALLED_APPS = [
     "matching_app.apps.MatchingAppConfig",
     "django_structlog",
     "corsheaders",
-    "channels",
 ]
 
 MIDDLEWARE = [
