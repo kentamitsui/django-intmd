@@ -9,7 +9,7 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "django_intmd.settings.base")
 
 django_asgi_app = get_asgi_application()
 
-from matching_app.channels.routing import websocket_urlpatterns
+from matching_app.channels.routings import websocket_urlpatterns
 
 application = ProtocolTypeRouter(
     {
